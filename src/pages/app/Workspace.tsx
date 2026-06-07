@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Globe, Lock, FileText } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dialog";
 import {
   useStore,
-  ensureWorkspace,
   createPortal,
   selectPortals,
   type AccessPolicy,
@@ -23,7 +22,6 @@ import {
 export default function Workspace() {
   const navigate = useNavigate();
   const ws = useStore((s) => s.workspace);
-  useEffect(() => { if (!ws) ensureWorkspace(); }, [ws]);
   const portals = useStore(selectPortals);
   const docs = useStore((s) => s.docs);
 
