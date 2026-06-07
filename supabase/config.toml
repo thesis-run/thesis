@@ -1,0 +1,16 @@
+project_id = "ogjaehczysldvhhfwdlo"
+
+[functions.generate-access-key]
+verify_jwt = true
+
+[functions.validate-access-key]
+verify_jwt = false
+
+[functions.get-document-urls]
+verify_jwt = false
+
+[functions.get-published-petition]
+verify_jwt = false
+
+[functions.publish-petition]
+verify_jwt = true
