@@ -6,27 +6,22 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
+import Workspace from "./pages/app/Workspace";
+import PortalView from "./pages/app/PortalView";
+import DocView from "./pages/app/DocView";
+import PortalSite from "./pages/published/PortalSite";
+import { useStore, portalByDomain } from "./lib/store";
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5,
-    },
-  },
+  defaultOptions: { queries: { staleTime: 1000 * 60 * 5 } },
 });
 
-// Placeholder for the workspace app shell (built in the app phase).
-const AppPlaceholder = () => (
-  <div className="min-h-screen flex flex-col items-center justify-center gap-3 bg-background px-6 text-center">
-    <span className="font-heading text-2xl font-bold tracking-tight">thesis</span>
-    <p className="font-mono text-xs tracking-wider text-muted-foreground">
-      The workspace is coming online.
-    </p>
-    <a href="/" className="font-mono text-xs tracking-wider underline underline-offset-4">
-      ← back home
-    </a>
-  </div>
-);
+/** At the apex, a request on a mapped custom domain renders that portal directly. */
+function Root() {
+  const host = typeof window !== "undefined" ? window.location.hostname : "";
+  const portal = useStore((s) => portalByDomain(s, host));
+  return portal ? <PortalSite portalOverride={portal} /> : <Landing />;
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -35,8 +30,12 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/app/*" element={<AppPlaceholder />} />
+          <Route path="/" element={<Root />} />
+          <Route path="/app" element={<Workspace />} />
+          <Route path="/app/p/:portalSlug" element={<PortalView />} />
+          <Route path="/app/p/:portalSlug/:docSlug" element={<DocView />} />
+          <Route path="/view/:portalSlug" element={<PortalSite />} />
+          <Route path="/view/:portalSlug/:docSlug" element={<PortalSite />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
