@@ -45,17 +45,16 @@ const Landing = () => {
       <main className="w-full max-w-3xl flex-1 flex flex-col items-center text-center pt-20 relative z-10">
         {/* hero */}
         <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-muted-foreground mb-6">
-          Documentation portals for the AI age
+          Open-core · MCP-native
         </p>
-        <h1 className="font-heading text-4xl sm:text-6xl font-bold tracking-tight leading-[1.05] max-w-2xl">
-          Your agent writes the docs.
+        <h1 className="font-heading text-5xl sm:text-7xl font-bold tracking-tight leading-[1.02] max-w-3xl">
+          Docs Portal for the
           <br />
-          <span className="text-accent">Thesis</span> publishes the portal.
+          <span className="text-accent">AI Age</span>
         </h1>
-        <p className="font-sans text-base text-muted-foreground leading-relaxed mt-6 max-w-xl">
-          Bring your own agent — Claude, Codex, anything with the Thesis{" "}
-          <span className="font-mono text-foreground">MCP</span>. It drafts the docs. Thesis
-          structures, gates, renders, and ships them as a portal on your own domain.
+        <p className="font-sans text-base text-muted-foreground leading-relaxed mt-7 max-w-xl">
+          Your agent writes the docs. Thesis structures, gates, renders, and ships them as a
+          portal on your own domain.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-9">

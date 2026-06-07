@@ -5,7 +5,7 @@
  * whole app talks to. v1 ships a localStorage implementation; a Supabase/git-backed
  * implementation drops in behind the same interface without touching the UI.
  */
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStoreWithSelector } from "use-sync-external-store/with-selector";
 import { portalKey, docKey, accessKey as genAccessKey, uid, slugify } from "./ids";
 
 export type AccessPolicy = "public" | "gated";
@@ -96,13 +96,20 @@ function subscribe(cb: () => void) {
 }
 const getSnapshot = () => state;
 
-/** Reactive selector hook. */
+// Shallow equality so derived arrays (new ref each compute, same contents) don't loop.
+function eq<T>(a: T, b: T): boolean {
+  if (Object.is(a, b)) return true;
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) if (!Object.is(a[i], b[i])) return false;
+    return true;
+  }
+  return false;
+}
+
+/** Reactive selector hook (stable across derived selectors). */
 export function useStore<T>(selector: (s: State) => T): T {
-  return useSyncExternalStore(
-    subscribe,
-    () => selector(state),
-    () => selector(state),
-  );
+  return useSyncExternalStoreWithSelector(subscribe, getSnapshot, getSnapshot, selector, eq);
 }
 
 const now = () => new Date().toISOString();

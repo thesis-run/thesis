@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Globe, Lock, FileText } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
@@ -22,7 +22,8 @@ import {
 
 export default function Workspace() {
   const navigate = useNavigate();
-  const ws = useStore((s) => s.workspace) ?? ensureWorkspace();
+  const ws = useStore((s) => s.workspace);
+  useEffect(() => { if (!ws) ensureWorkspace(); }, [ws]);
   const portals = useStore(selectPortals);
   const docs = useStore((s) => s.docs);
 
@@ -39,7 +40,7 @@ export default function Workspace() {
   };
 
   return (
-    <AppShell crumbs={[{ label: ws.name }]}>
+    <AppShell crumbs={[{ label: ws?.name ?? "Workspace" }]}>
       <div className="max-w-4xl mx-auto px-6 py-10">
         <div className="flex items-end justify-between mb-8">
           <div>
