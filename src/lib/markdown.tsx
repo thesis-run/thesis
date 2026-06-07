@@ -88,9 +88,14 @@ function childText(children: ReactNode): string {
   if (c && c.props) return childText(c.props.children);
   return "";
 }
+const HEADING_CLS: Record<string, string> = {
+  h1: "text-3xl font-bold mb-6 mt-8 scroll-mt-24 first:mt-0",
+  h2: "text-2xl font-semibold mb-4 mt-8 scroll-mt-24",
+  h3: "text-xl font-semibold mb-3 mt-6 scroll-mt-24",
+};
 const heading = (Tag: "h1" | "h2" | "h3") => ({ children }: { children?: ReactNode }) => {
   const id = slugifyHeading(childText(children));
-  return <Tag id={id}>{children}</Tag>;
+  return <Tag id={id} className={HEADING_CLS[Tag]}>{children}</Tag>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -102,13 +107,26 @@ const components: Record<string, any> = {
   h1: heading("h1"),
   h2: heading("h2"),
   h3: heading("h3"),
+  p: (props: { children?: ReactNode }) => <p className="mb-4 leading-relaxed">{props.children}</p>,
+  ul: (props: { children?: ReactNode }) => <ul className="list-disc pl-6 mb-4 space-y-1">{props.children}</ul>,
+  ol: (props: { children?: ReactNode }) => <ol className="list-decimal pl-6 mb-4 space-y-1">{props.children}</ol>,
+  blockquote: (props: { children?: ReactNode }) => (
+    <blockquote className="border-l-2 border-border pl-4 italic text-muted-foreground my-4">{props.children}</blockquote>
+  ),
+  hr: () => <hr className="my-10 border-border" />,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  code: (props: any) => <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[0.85em]" {...props} />,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pre: (props: any) => (
+    <pre className="my-6 overflow-x-auto rounded-lg border border-border bg-muted/40 p-4 font-mono text-[13px] leading-relaxed [&>code]:bg-transparent [&>code]:p-0 [&>code]:text-[13px]" {...props} />
+  ),
+  table: (props: { children?: ReactNode }) => (
+    <div className="my-6 overflow-x-auto"><table className="w-full text-sm border-collapse">{props.children}</table></div>
+  ),
+  th: (props: { children?: ReactNode }) => <th className="border border-border bg-muted/50 px-3 py-2 text-left font-medium">{props.children}</th>,
+  td: (props: { children?: ReactNode }) => <td className="border border-border px-3 py-2">{props.children}</td>,
   a: (props: { href?: string; children?: ReactNode }) => (
-    <a
-      href={props.href}
-      target="_blank"
-      rel="noreferrer"
-      className="text-accent underline underline-offset-2 hover:opacity-80"
-    >
+    <a href={props.href} target="_blank" rel="noreferrer" className="text-primary underline hover:text-primary/80">
       {props.children}
     </a>
   ),
@@ -119,7 +137,7 @@ const components: Record<string, any> = {
 
 export function MarkdownRenderer({ md, className = "" }: { md: string; className?: string }) {
   return (
-    <div className={`prose prose-neutral max-w-none prose-headings:font-heading prose-headings:tracking-tight prose-pre:bg-muted/40 prose-pre:border prose-pre:border-border prose-code:font-mono ${className}`}>
+    <div className={`text-[15px] leading-relaxed text-foreground ${className}`}>
       <Markdown remarkPlugins={[remarkGfm, remarkDirective, remarkDirectives]} components={components}>
         {md}
       </Markdown>
